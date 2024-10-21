@@ -1,0 +1,43 @@
+﻿@page
+@model IndexModel
+@using System.Net.Http.Headers;
+@{
+    ViewData["Title"] = "Home page";
+
+    // Token de autenticación
+    string token = "EAAGbxeMTYmoBOzc5vhN2RtqB4lg6qFxisv0WJ5uFuuOgcxQcNr1LHmzBRBo4FZCu3CaDUXNlbY8QksKZAI17kspWkF3Hd20HFOf92xIgtEjMq0ZBPWUNFvU9GurolpLcAQ6PklyjZCvqTheOwP5z4r4yo6JZCqZC9lHZBKln7nGJ4fq39XnuyQZAq0FMuspZBgbxeFT02ZAzptoXsDYIiZBGIQsyvUrbfkZD";
+
+    // Identificador del número de teléfono en la API de Facebook
+    string idTelefono = "475212822336540";
+
+    // Teléfono destino (eliminando espacios)
+    string telefono = "526442545275";
+
+    // Crear el cliente HTTP
+    HttpClient client = new HttpClient();
+
+    // Crear la solicitud POST
+    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post,
+        "https://graph.facebook.com/v15.0/" + idTelefono + "/messages");
+
+    // Agregar el encabezado de autorización
+    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+    // Crear el contenido del cuerpo en formato JSON
+    request.Content = new StringContent(
+        "{\"messaging_product\": \"whatsapp\", \"to\": \"" + telefono + "\", \"type\": \"template\", \"template\": { \"name\": \"hello_world\", \"language\": { \"code\": \"en_US\" } } }",
+        System.Text.Encoding.UTF8,
+        "application/json"
+    );
+
+    // Enviar la solicitud de forma asíncrona
+    HttpResponseMessage response = await client.SendAsync(request);
+
+    // Leer el contenido de la respuesta
+    string responseBody = await response.Content.ReadAsStringAsync();
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
